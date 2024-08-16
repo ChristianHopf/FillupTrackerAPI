@@ -9,10 +9,10 @@ const router = express.Router();
 // My steamid: 76561198045534521
 // Fillup steamid: 76561198099631791
 // https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1
-router.get("/getachievements", async (req, res, next) => {
+router.get("/getachievements/:steamid", async (req, res, next) => {
   try {
     const response = await fetch(
-      `https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?appid=570940&key=${process.env.API_KEY}&steamid=76561198099631791`
+      `https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?appid=570940&key=${process.env.API_KEY}&steamid=${req.params.steamid}`
     );
     if (!response.ok) {
       console.error(`Error: Received status ${response.status}`);
@@ -29,10 +29,10 @@ router.get("/getachievements", async (req, res, next) => {
   }
 });
 
-router.get("/getplayersummaries", async (req, res, next) => {
+router.get("/getplayersummaries/:steamid", async (req, res, next) => {
   try {
     const response = await fetch(
-      `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${process.env.API_KEY}&steamids=[76561198099631791]`
+      `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${process.env.API_KEY}&steamids=[${req.params.steamid}]`
     );
     if (!response.ok) {
       console.error(`Error: Received status ${response.status}`);
@@ -49,11 +49,11 @@ router.get("/getplayersummaries", async (req, res, next) => {
   }
 });
 
-router.get("/getownedgames", async (req, res, next) => {
+router.get("/gethours/:steamid", async (req, res, next) => {
   try {
     // 76561198099631791
     const response = await fetch(
-      `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${process.env.API_KEY}&steamid=76561198099631791&include_appinfo=1&include_played_free_games=1&appids_filter[0]=570940&include_free_sub=1&language=english&include_extended_appinfo=0&format=json`
+      `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${process.env.API_KEY}&steamid=${req.params.steamid}&include_appinfo=1&include_played_free_games=1&appids_filter[0]=570940&include_free_sub=1&language=english&include_extended_appinfo=0&format=json`
     );
     if (!response.ok) {
       console.error(`Error: Received status ${response.status}`);
