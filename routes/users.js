@@ -60,7 +60,12 @@ router.get("/getachievements/:steamid", async (req, res, next) => {
       }
     });
     // console.log(result[1].unlocktime > result[2].unlocktime);
-    result.sort(({ unlocktime: a }, { unlocktime: b }) => b - a);
+
+    // If this steamid hasn't completed any achievements, don't bother sorting
+    if (result.length > 0) {
+      result.sort(({ unlocktime: a }, { unlocktime: b }) => b - a);
+    }
+
     // console.log(result);
     res.json(result);
   } catch (err) {
@@ -112,13 +117,15 @@ router.get("/gethours/:steamid", async (req, res, next) => {
     // res.json(data);
     // If the user hasn't played the game in the last 2 weeks,
     // the playtime_2weeks property is absent
-    data.response.games[0].playtime_2weeks ? res.json({
-      playtime_forever: data.response.games[0].playtime_forever,
-      playtime_2weeks: data.response.games[0].playtime_2weeks,
-    }) : res.json({
-      playtime_forever: data.response.games[0].playtime_forever,
-      playtime_2weeks: 0,
-    });
+    data.response.games[0].playtime_2weeks
+      ? res.json({
+          playtime_forever: data.response.games[0].playtime_forever,
+          playtime_2weeks: data.response.games[0].playtime_2weeks,
+        })
+      : res.json({
+          playtime_forever: data.response.games[0].playtime_forever,
+          playtime_2weeks: 0,
+        });
   } catch (err) {
     next(err);
   }
